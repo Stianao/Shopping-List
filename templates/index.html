@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        
+        <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}> <!-- Jinja2 is used here. Used to place values from Python/backend -->
+    </head>
+    <body >
+        {% raw %} <!-- Jinja2 uses the same syntax as Vue. This 'raw' are used to prevent Jinja2 to read {{ ... }} -->
+        <!-- Jinja2 are used  -->
+        <div id="app" ><!-- :class="{ 'dark': darkMode }" -->
+            <div class="container">
+                <h1 class="h1">Shopping list</h1>
+                <form v-on:submit.prevent="addItem">
+                    <p class="p">Add item to shopping list</p>
+                    <div class="addInput">
+                        <input type="text" required v-model="itemName"> <!-- Vue is binding itemName to data in JS. itemName will be updated automatically -->
+                        <button type="submit">Add item</button>
+                    </div>
+                    <div class="searchInput">
+                        <input v-if="shoppingList.length > 0" type="text" v-model="search" placeholder="Search shopping list"> <!-- if shopping list have more than one item, show the 'sort-button' -->
+                    </div>
+                    
+                </form>
+                    <p>Items:</p>
+                    <ul>
+                        <li v-for="(item, index) in filteredList" :key="index"> <!-- goes through every item in the filtered list. (for-loop) -->
+                        <span @click="changeItemFound(index)" :class="{ found: item.done }">
+                            {{item.name}}, [{{item.number}}]
+                        </span>
+                            <button @click="decreaseNumber(index)">-</button>
+                            <button @click="increaseNumber(index)">+</button>
+                            <button @click="removeItem(index)">Remove</button>
+                        </li>
+                    </ul>
+    
+                    <button v-if="shoppingList.length > 0" @click="removeShoppingList" class="deleteButton">Delete shopping list</button>
+                    <button v-if="shoppingList.length > 1" @click="sortShoppingListAlphabetic" class="sortButton">Sort alphabetically</button>
+                    <!-- <button v-if="lastRemoved" @click="regretRemovedItem">Recover removed item</button> -->
+                <!-- <button @click="darkMode = !darkMode">
+                        {{ darkMode ? 'lightmode' : 'darkmode' }}
+                </button>      -->
+            </div>
+        </div>
+        {% endraw %} <!-- Jinja2 leaves everything above alone -->
+            <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+            <script>
+               const app = Vue.createApp({ // creates a new Vue application
+                data() {  // returns an object with a reactive state  - what Vue will watch over
+                    return {
+                        itemName: '', // the text that goes in the input field 
+                        shoppingList: [], // the entire shoppinglist from backend
+                        search: '', // the value in the searchfield
+                        //darkMode: false
+                        //lastRemoved: null
+                    }
+                },
+                computed: { // computed property - gets automatically updated when either ShoppinList or search changes.
+                    // function is checking item.name (in lowercase) contains whats written in the searchfield (in lowercase).
+                    filteredList() { // see line 27: v-for.
+                        return this.shoppingList.filter(item => // arrow = go through every item.
+                            item.name.toLowerCase().includes(this.search.toLowerCase())) // returns matching items. toLowerCase makes search non case-sensitive.
+                    }
+                },
+                // Defining all application logic.
+                methods: {
+                    addItem() {
+                        const name = this.itemName.trim().toLowerCase() // The input from user. Removes whitespace. Turns into lowercase
+
+                        if (!name) return // stop function if input is empty
+
+                        //const exists = this.shoppingList.some(item => item.name.toLowerCase() === name)
+                        
+                        fetch('/items', { // API call (fetch) => This is how Vue(frontend) communicates with Flask (server/backend).
+                            method: 'POST', // POST: sending data to the server. 
+                            headers: { 'Content-Type': 'application/json' }, // headers: what data is being sent to the server, {...}: Sending JSON-data
+                            body: JSON.stringify({ // body is the requests content. Sending a JS-object with two values. Turning it into a JSON-string so Flask can read in app.py by using request.json.
+                                name: name,
+                                number: 1
+                            })
+                        })
+                        // .then is used in JS to retrive data from a server. A methon on Promise-objects.
+                        // Fetch() may take time, and JS dont stop and wait and will continue running.
+                        // .then : when done, run this code.
+                        .then(res => res.json()) // the answer (res) from server, turn it (parsing) into JSON.
+                        .then(data => { // parsed object retrieved as data. 
+                            console.log(data.message) // When JSON is clear, write (print) it out.
+                            this.itemName = '' // empties the field after the item is added. itemName is now an empty string again
+                            this.fetchItems() // retrieves list from backend -> updates list
+                        })
+                        
+                        //if (!exists) {
+                        //    this.shoppingList.push({
+                        //        name: name,
+                        //        number: 1,
+                        //        done: false
+                        //    })
+
+                        //    this.itemName = ''
+                        //}
+                    },
+                    fetchItems() {
+                        fetch('/items')
+                        .then(res => res.json())
+                        .then(data => {
+                            this.shoppingList = data
+                        })
+                    },
+
+                    increaseNumber(index) {
+                        //this.shoppingList[index].number++
+                        const item = this.shoppingList[index]
+                        const newNumber = item.number + 1
+
+                        fetch(`/items/${item.id}/number`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ number: newNumber})
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data.message)
+                            this.fetchItems()
+                        })
+                    },
+
+                    decreaseNumber(index) {
+                        //if (this.shoppingList[index].number > 1) {
+                        //    this.shoppingList[index].number--
+                        //}
+                        const item = this.shoppingList[index]
+                        if (item.number > 1) {
+                            const newNumber = item.number - 1
+
+                            fetch(`/items/${item.id}/number`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ number: newNumber})
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log(data.message)
+                                this.fetchItems()
+                            })
+                        }
+                    },
+
+                    removeItem(index) {
+                        const item = this.shoppingList[index]
+
+                        fetch(`/item/${item.id}`, {
+                            method: 'DELETE'
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data.message)
+                            this.fetchItems() // updates list after deletion
+                        })
+                        //const removed = this.shoppingList.splice(index, 1)[0]
+                        //this.lastRemoved = removed
+
+
+                        // this.shoppingList.splice(index, 1) ikke slett!!!!!!!
+
+
+
+                        //setTimeout(() => {this.lastRemoved = null}, 5000)
+                    },
+
+                    removeShoppingList() {
+                        if (confirm("Are you sure you want to delete your shoppinglist?")) {
+                            fetch('/items', {
+                                method: 'DELETE'
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log(data.message)
+                                this.shoppingList = []
+                                this.fetchItems()
+                            })
+                        }
+                    },
+
+                    /*regretRemovedItem() {
+                        if (this.lastRemoved) {
+                            this.shoppingList.push(this.lastRemoved)
+                            this.lastRemoved = null
+                        }
+                    },*/
+
+                    //removeShoppingList(index) {
+                    //    if (confirm("Are you sure you want to delete your shopping list?")) {
+                    //        this.shoppingList = []
+                    //    }
+                    //},
+
+                    sortShoppingListAlphabetic() {
+                        this.shoppingList.sort((a, b) => {
+                            return a.name.localeCompare(b.name)
+                        })
+                    },
+
+                    changeItemFound(index) {
+                        //this.shoppingList[index].done = !this.shoppingList[index].done
+                        const item = this.shoppingList[index]
+                        const newDone = !item.done
+
+
+                        fetch(`/items/${item.id}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ done: newDone })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data.message)
+                            this.fetchItems()
+                        })
+
+                    }
+                },
+                mounted() {
+                    this.fetchItems() // retrieves the shoppinglist as soon as the page is viewed
+                }
+            })
+               app.mount('#app')
+            </script>
+    </body>
+</html>

@@ -1,0 +1,57 @@
+body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    height: 40vh;
+    margin: 0;
+}
+
+.addInput {
+    display: flex;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    margin-bottom: 1em;
+    justify-content: center;
+}
+
+p {
+    font-size: 18px;
+}
+
+.searchInput {
+    margin: 0.5 auto;
+    display: block;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2em;
+    
+}
+
+ul {
+    list-style-type: circle;
+    font-size: 18px;
+}
+
+/*  */
+.found {
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+    opacity: 0.6;
+}
+
+li button {
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    padding: 0.2em o.5em;
+}
+
+.deleteButton {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+}
+
+/*  */
