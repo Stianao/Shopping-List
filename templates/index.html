@@ -10,7 +10,9 @@
         <!-- Jinja2 are used  -->
         <div id="app" ><!-- :class="{ 'dark': darkMode }" -->
             <div class="container">
-                <h1 class="h1">Shopping list</h1>
+                <div id="header">
+                    <h1 class="h1">Shopping list</h1>
+                </div>
                 <form v-on:submit.prevent="addItem">
                     <p class="p">Add item to shopping list</p>
                     <div class="addInput">

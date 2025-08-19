@@ -1,3 +1,8 @@
+header {
+    background-color: royalblue;
+    border: 5px outset lightblue;
+}
+
 body {
     font-family: sans-serif;
     display: flex;
