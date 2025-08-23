@@ -2,6 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         
         <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}> <!-- Jinja2 is used here. Used to place values from Python/backend -->
     </head>
@@ -24,20 +26,24 @@
                     </div>
                     
                 </form>
-                    <p>Items:</p>
+                    <p><i class="fa-solid fa-shopping-cart"> Cart</i></p>
                     <ul>
                         <li v-for="(item, index) in filteredList" :key="index"> <!-- goes through every item in the filtered list. (for-loop) -->
                         <span @click="changeItemFound(index)" :class="{ found: item.done }">
                             {{item.name}}, [{{item.number}}]
                         </span>
-                            <button @click="decreaseNumber(index)">-</button>
+                        <span class="quantity-buttons">
                             <button @click="increaseNumber(index)">+</button>
-                            <button @click="removeItem(index)">Remove</button>
+                            <button @click="decreaseNumber(index)">-</button>
+                        </span>
+                            <button @click="removeItem(index)"><i class="fa-solid fa-trash"></i></button>
                         </li>
                     </ul>
     
-                    <button v-if="shoppingList.length > 0" @click="removeShoppingList" class="deleteButton">Delete shopping list</button>
-                    <button v-if="shoppingList.length > 1" @click="sortShoppingListAlphabetic" class="sortButton">Sort alphabetically</button>
+                    <div class="button-container">
+                        <button v-if="shoppingList.length > 0" @click="removeShoppingList">Delete shopping list</button>
+                        <button v-if="shoppingList.length > 1" @click="sortShoppingListAlphabetic">Sort alphabetically</button>
+                    </div>
                     <!-- <button v-if="lastRemoved" @click="regretRemovedItem">Recover removed item</button> -->
                 <!-- <button @click="darkMode = !darkMode">
                         {{ darkMode ? 'lightmode' : 'darkmode' }}
