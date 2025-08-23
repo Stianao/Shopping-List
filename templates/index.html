@@ -34,8 +34,8 @@
                             {{item.name}}, [{{item.number}}]
                         </span>
                         <span class="quantity-buttons">
-                            <button @click="increaseNumber(index)">+</button>
-                            <button @click="decreaseNumber(index)">-</button>
+                            <button @click="increaseNumber(index)" ><i class="arrow up"></i></button>
+                            <button @click="decreaseNumber(index)"><i class="arrow down"></i></button>
                         </span>
                             <button @click="removeItem(index)"><i class="fa-solid fa-trash"></i></button>
                         </li>

@@ -36,6 +36,23 @@ body {
     margin-top: auto;
 }
 
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg)
+}
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
 .addInput {
     display: flex;
     gap: 0.5em;
@@ -139,7 +156,7 @@ li button {
     margin-right: 0.4em;
 }
 
-.quantity-buttons {
+.quantity-buttons{
     display: inline-flex;
     flex-direction: column;
     gap: 4px;
@@ -147,6 +164,16 @@ li button {
     align-items: center;
     line-height: 1;
 }
+
+.quantity-buttons button {
+  background: none;      /* ingen bakgrunn */
+  border: none;          /* ingen kant */
+  padding: 0;            /* ingen ekstra luft */
+  margin: 0;
+  font-size: 20px;       /* gjør pilene passe store */
+  cursor: pointer;       /* pekehånd når man holder over */
+}
+
 
 ul li {
   display: flex;
