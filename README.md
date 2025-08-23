@@ -12,7 +12,7 @@ Frontend is built with **Vue.js**, backend with **Flask (Python)**, and styled w
 - Search for items
 - Sort items aplhabetically
 - Remove items
-- Simple. responsive layout (goal)
+- Simple, responsive layout (goal)
 
 ## Teck Stack
 - **Frontend:** HTML, CSS, JavaScript (Vue3)
