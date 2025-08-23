@@ -14,8 +14,6 @@ Frontend is built with **Vue.js**, backend with **Flask (Python)**, and styled w
 - Remove items
 - Simple. responsive layout (goal)
 
---- 
-
 ## Teck Stack
 - **Frontend:** HTML, CSS, JavaScript (Vue3)
 - **Backend:** Python Flask
