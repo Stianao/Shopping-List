@@ -20,7 +20,7 @@
                     <p class="add-item-text">Add item to shopping list</p>
                     <div class="addInput">
                         <input type="text" required v-model="itemName"> <!-- Vue is binding itemName to data in JS. itemName will be updated automatically -->
-                        <button type="submit">Add item</button>
+                        <button type="submit" class="add-button">Add item</button>
                     </div>
                     <div class="searchInput">
                         <input v-if="shoppingList.length > 0" type="text" v-model="search" placeholder="Search shopping list"> <!-- if shopping list have more than one item, show the 'sort-button' -->
