@@ -42,8 +42,10 @@
                     </ul>
     
                     <div class="button-container">
-                        <button v-if="shoppingList.length > 0" @click="removeShoppingList">Delete shopping list</button>
-                        <button v-if="shoppingList.length > 1" @click="sortShoppingListAlphabetic">Sort alphabetically</button>
+                        <button v-if="shoppingList.length > 0" @click="removeShoppingList" 
+                        class="delete-button">Delete shopping list</button>
+                        <button v-if="shoppingList.length > 1" @click="sortShoppingListAlphabetic" 
+                        class="sort-button">Sort alphabetically</button>
                     </div>
                     <!-- <button v-if="lastRemoved" @click="regretRemovedItem">Recover removed item</button> -->
                 <!-- <button @click="darkMode = !darkMode">
